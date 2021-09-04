@@ -1,3 +1,14 @@
+# D-app Exchange
+
+This project follows the Dapp University Bootcamp.
+Through this training I learned:
+- Solidity
+    - Truffle
+    - Remix IDE
+    - Ganche
+- React
+- JS
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

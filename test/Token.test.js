@@ -12,9 +12,9 @@ require('chai')
 const Token = artifacts.require('./Token')
 
 contract('Token', ([deployer, receiver, exchange]) => {
-    const name = 'Polar Bear Swap'
-    const symbol = 'PBS'
-    const decimals = '18'
+    const name        = 'Polar Bear Swap'
+    const symbol      = 'PBS'
+    const decimals    = '18'
     const totalSupply = tokens(6000000).toString()
     // contract sets up our Token and defines the core properties
 
@@ -196,6 +196,5 @@ contract('Token', ([deployer, receiver, exchange]) => {
             //     allowance.toString().should.equal(amount.toString())
             // })
         })
-
     })
 })

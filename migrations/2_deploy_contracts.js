@@ -1,5 +1,15 @@
 const Token = artifacts.require("Token");
+const Exchange = artifacts.require("Exchange");
 
-module.exports = function (deployer) {
-  deployer.deploy(Token);
+module.exports = async function (deployer) {
+  // using web3 to get info
+  const accounts = await web3.eth.getAccounts()
+
+  await deployer.deploy(Token);
+
+  const feeAccount = accounts[0]
+  const feePercent = 1
+
+  
+  await deployer.deploy(Exchange, feeAccount, feePercent)
 };

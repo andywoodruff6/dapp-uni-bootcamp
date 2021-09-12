@@ -2,10 +2,9 @@
 Compiled below is a list of resource links to many helpful pieces of documentation.
 
 ### Blockchain Resources
-[Testing with Truffle](https://www.trufflesuite.com/docs/truffle/testing/testing-your-contracts)
-<br>
-[Mocha](https://mochajs.org/) is a feature-rich JavaScript test framework running on Node.js and in the browser
-[Chai](https://www.chaijs.com/)
+[Testing with Truffle](https://www.trufflesuite.com/docs/truffle/testing/testing-your-contracts)\
+[Mocha](https://mochajs.org/) is a feature-rich JavaScript test framework running on Node.js and in the browser\
+[Chai](https://www.chaijs.com/)\
 
 ### Ethereum / Solidity Standards
 [SOLIDITY DOCS V0.8.7](https://docs.soliditylang.org/en/v0.8.7/)

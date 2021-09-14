@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
 import './App.css';
-import Web3 from 'web3'
-import Token from '../abis/Token.json'
+import { 
+  loadWeb3, 
+  loadAccount, 
+  loadToken,
+  loadExchange
+} from '../store/interactions'
+import { connect } from 'react-redux';
 
 class App extends Component {
   componentDidMount() {
-    this.loadBlockchainData()
+    this.loadBlockchainData(this.props.dispatch)
   }
 
-  async loadBlockchainData() {
-    // This is a seperate function to use async. We do not want async in componentWillMount
-    const web3 = new Web3(window.ethereum)
-    const network = await web3.eth.net.getNetworkType() //this is one of several wayt to handle this
+  async loadBlockchainData(dispatch) {
+    const web3      = await loadWeb3(dispatch)
     const networkId = await web3.eth.net.getId()
-    // console.log("networkId", networkId)
-    const accounts = await web3.eth.getAccounts()
-    const networks = Token.networks[networkId].address
-    console.log("address", networks) 
-    // This code currently only works on my meta mask private network. needs to be refactored later
-    // Also null and undefiend will break the code
-    const token = new web3.eth.Contract(Token.abi, Token.networks[networkId].address)
-    const totalSupply = await token.methods.totalSupply().call()
-    console.log('totalSupply', totalSupply)
+    const accounts  = await loadAccount(web3, dispatch)
+    const token     = await loadToken(web3, networkId, dispatch)
+    const exchange  = await loadExchange(web3, networkId, dispatch)
   }
 
   render() {
@@ -115,5 +112,10 @@ class App extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return{
+    // Add something late
+  }
+}
 
-export default App;
+export default connect(mapStateToProps)(App);

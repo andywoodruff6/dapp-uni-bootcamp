@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import { accountSelector } from '../store/selectors'
 
+// renders the navbar with the below styling
+// the long className comes from bootstrap to give auto styles
 class Navbar extends Component{
     render() {
         return(
@@ -33,4 +35,5 @@ function mapStateToProps(state) {
         account: accountSelector(state)
     }
 }
+// exports the above code as the Navbar class that we call in App.js
 export default connect(mapStateToProps)(Navbar)

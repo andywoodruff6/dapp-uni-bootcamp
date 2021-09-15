@@ -5,7 +5,7 @@ import { ETHER_ADDRESS,
          token, 
          ether,
          GREEN,
-         RED }          from '../helpers'
+         RED }            from '../helpers'
 
 const account = state => get(state, 'web3.account')
 export const accountSelector = createSelector(account, a => a)
@@ -13,6 +13,7 @@ export const accountSelector = createSelector(account, a => a)
 // export const accountSelector = createSelector(account, a => a)
 // ^ this is a routine pattern when we want to fetch items from the state 
 
+// Loading basic states to be used in App.js ///////////////////////////////////
 const tokenLoaded = state => get(state, 'token.loaded', false)
 export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl)
 
@@ -21,62 +22,66 @@ export const exchangeLoadedSelector = createSelector(exchangeLoaded, el => el)
 
 const exchange = state => get(state, 'exchange.contract')
 export const exchangeSelector = createSelector(exchange, e => e)
-
+const filledOrdersLoaded = state => get(state, 'exchange.filledOrders.loaded', false)
+export const filledOdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
 
 export const contractsLoadedSelector = createSelector(
     tokenLoaded,
     exchangeLoaded,
     (tl, el) => (tl && el)
 )
-const filledOrdersLoaded = state => get(state, 'exchange.filledOrders.loaded', false)
-export const filledOdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
+////////////////////////////////////////////////////////////////////////////////
 
+// 1) Set up filledOrders like above, except this is an array
+// 2) Take orders and sort ascending (a-b) for decorating
+// 3) Apply styling to the tokenPrice
+// 4) Take orders and sort descending (b-a) for display
 const filledOrders = state => get(state, 'exchange.filledOrders.data', [])
 export const filledOdersSelector = createSelector(
     filledOrders,
     (orders) => {
-        // sorting orders by timestamp for decorating
         orders = orders.sort((a,b) => a.timestamp - b.timestamp)
-        // decorate the orders
         orders = decorateFilledOrders(orders)
-        // sorting orders by timestamp for display
         orders = orders.sort((a,b) => b.timestamp - a.timestamp)
         return orders
     } )
-
+// 1) bring in all the orders from the smart contract
+// 2) set up previous order to track history
+// 3) map decorateOrder and decorateFilledOrder through
+// 4) reset prviousOrder to order for loop
 const decorateFilledOrders = (orders) => {
-    //Track previous order history
     let previousOrder = orders[0]
     return(
         orders.map((order) =>{
             order = decorateOrder(order)
             order = decorateFilledOrder(order, previousOrder)
-            previousOrder = order // update previous order once it is decorated
+            previousOrder = order 
             return order
         })
     )
 }
+// 1) setting decorateFilledOrder as a pass through so when called above just
+//    gets us the long return statement
 const decorateFilledOrder = (order, previousOrder) => {
     return({
         ...order,
         tokenPriceClass: tokenPriceClass(order.tokenPrice, order.id, previousOrder)
     })
 }
+// 1) Goal is to properly color the orders in Trades.js
+// 2) GREEN for higher price, RED for lower price
 const tokenPriceClass = (tokenPrice, orderId, previousOrder) => {
-    //show green if new order price is greater than previous
-    //show red if new order price is greater than previous
-    if(previousOrder.id === orderId) { 
-        return GREEN
-    } // ideal for a one line turner operator or w.e. its called
+    if(previousOrder.id === orderId) { return GREEN }
     if(previousOrder.tokenPrice <= tokenPrice) {
         return GREEN
     } else {
         return RED
     }
 }
-
-
-
+// 1) take in an order 
+// 2) asign the correct title to GIVE and GET
+// 3) Create tokenPrice
+// 4) Set the returns so this can be used in UI
 const decorateOrder = (order) => {
     let etherAmount
     let tokenAmount

@@ -41,9 +41,8 @@ class App extends Component {
     );
   }
 }
-
+// Passing the state to Props
 function mapStateToProps(state) {
-  console.log('CONTRACT LOADED ?', contractsLoadedSelector(state))
   return{
     contractsLoaded: contractsLoadedSelector(state)
   }

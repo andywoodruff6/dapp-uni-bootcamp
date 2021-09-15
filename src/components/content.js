@@ -39,7 +39,7 @@ class Content extends Component{
           <div className="vertical">
             <div className="card bg-dark text-white">
               <div className="card-header">
-                Card Title
+                Order Book
               </div>
               <div className="card-body">
                 <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>

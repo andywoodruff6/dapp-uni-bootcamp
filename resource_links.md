@@ -19,10 +19,14 @@ Ethereum Improvement Proposal [eip-20](https://github.com/ethereum/EIPs/blob/mas
  - [React Components](https://reactjs.org/docs/react-component.html)\
 [Bootstrap Cards](https://getbootstrap.com/docs/4.0/components/card/)\
 [Bootstrap Navs](https://getbootstrap.com/docs/4.0/components/navs/)\
-[CSS Flexbot](https://www.w3schools.com/Css/css3_flexbox.asp)
-[Reselect](https://github.com/reduxjs/reselect)
-[Lodash](https://lodash.com/docs/4.17.11#get)
-[Mozilla Dev Tools](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)
+[Bootstrap Tables](https://getbootstrap.com/docs/4.0/content/tables/)\
+[CSS Flexbot](https://www.w3schools.com/Css/css3_flexbox.asp)\
+[Reselect](https://github.com/reduxjs/reselect)\
+[Lodash](https://lodash.com/docs/4.17.11#get)\
+[Mozilla Dev Tools](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)\
+[MomentJS](https://momentjs.com/)
+
+
 
 
 ### General Links

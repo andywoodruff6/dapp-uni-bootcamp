@@ -1,11 +1,14 @@
-import Web3 from 'web3'
 import {
   web3Loaded,
   web3AccountLoaded,
   tokenLoaded,
-  exchangeLoaded
+  exchangeLoaded,
+  cancelledOrdersLoaded,
+  filledOrdersLoaded,
+  allOrdersLoaded
 } from './actions'
-import Token from '../abis/Token.json'
+import Web3     from 'web3'
+import Token    from '../abis/Token.json'
 import Exchange from '../abis/Exchange.json'
 
 export const loadWeb3 = async (dispatch) => {
@@ -52,3 +55,23 @@ export const loadExchange = async (web3, networkId, dispatch) => {
     return null
   }
 }
+
+export const loadAllOrders = async (exchange, dispatch) => {
+  const cancelStream = await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest'})
+  // This looks on the entire block chain. 
+  // Might be faster to start just before launch to ignore impossible solutions
+  const cancelledOrders = cancelStream.map((event)=> event.returnValues)
+  // add cancled order to the redux store
+  dispatch(cancelledOrdersLoaded(cancelledOrders))
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+  const tradeStream = await exchange.getPastEvents('Trade', { fromBlock: 0, toBlock: 'latest'})
+  const filledOrders = tradeStream.map((event) => event.returnValues)
+  dispatch(filledOrdersLoaded(filledOrders))
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+  const orderStream = await exchange.getPastEvents('Order', { fromBlock: 0, toBlock: 'latest'})
+  const allOrders = orderStream.map((event) => event.returnValues)
+  dispatch(allOrdersLoaded(allOrders))
+}
+// Fetch Canceled orders with the cancel event
+// fetch filled orders with the trade event
+// fetch all orders with the order event

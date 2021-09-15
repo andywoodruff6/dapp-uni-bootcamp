@@ -20,6 +20,9 @@ Ethereum Improvement Proposal [eip-20](https://github.com/ethereum/EIPs/blob/mas
 [Bootstrap Cards](https://getbootstrap.com/docs/4.0/components/card/)\
 [Bootstrap Navs](https://getbootstrap.com/docs/4.0/components/navs/)\
 [CSS Flexbot](https://www.w3schools.com/Css/css3_flexbox.asp)
+[Reselect](https://github.com/reduxjs/reselect)
+[Lodash](https://lodash.com/docs/4.17.11#get)
+[Mozilla Dev Tools](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)
 
 
 ### General Links

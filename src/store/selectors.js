@@ -1,4 +1,4 @@
-import { get, groupBy, reject } from 'lodash'
+import { get, groupBy, minBy, maxBy, reject } from 'lodash'
 import moment                   from 'moment'
 import { createSelector }       from "reselect"
 import { ETHER_ADDRESS, 
@@ -179,8 +179,7 @@ const decorateOrderBookOrder = (order) => {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-// // const myfilledOrdersLoaded = state => get(state, 'exchange.filledOrders.loaded', false)
+// MY TRANSACTIONS // 
 export const myFilledOrdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
 
 export const myFilledOrdersSelector = createSelector(
@@ -250,4 +249,49 @@ const decorateMyOpenOrder = (order, account) => {
         orderType,
         orderTypeClass: (orderType === 'buy' ? GREEN : RED)
     })
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+// PRICE CHART //
+
+export const priceChartLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
+
+export const prichChartSelector = createSelector(
+    filledOrders,
+    (orders) => {
+        orders = orders.sort((a,b) => a.timestamp - b.timestamp)
+        orders = orders.map((o) => decorateOrder(o))
+        let secondLastOrder, lastOrder
+        [secondLastOrder, lastOrder] = orders.slice(orders.length - 2, orders.length)
+        const lastPrice = get(lastOrder, 'tokenPrice', 0)
+        const secondLastPrice = get(secondLastOrder, 'tokenPrice', 0)
+
+        return({ // needs to be series > data > x,y where x is date and y is in/out/high/low
+            lastPrice,
+            lastPriceChange: (lastPrice >= secondLastPrice ? '+' : '-'),
+            series: [{
+                data: buildGraphData(orders)
+            }]  
+        })
+    }
+)
+// check moment documentation to learn more about the formatting
+// get hours where data exists
+// grouped the data by hour, then got all of the hours, 
+// then mapped that information into an array called graphData
+// also calculate hi/low/open/close
+const buildGraphData = (orders) => {
+    orders = groupBy(orders, (o)=> moment.unix(o.timestamp).startOf('hour').format())
+    const hours = Object.keys(orders)
+    const graphData = hours.map((hour) => {
+    const group = orders[hour]
+    const open  = group[0] //first order
+    const close = group[group.length - 1] // last order
+    const high  = maxBy(group, 'tokenPrice')
+    const low   = minBy(group, 'tokenPrice')
+        return({
+            x:new Date(hour),
+            y:[open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+        })
+    })
+    return graphData
 }

@@ -31,4 +31,5 @@ Ethereum Improvement Proposal [eip-20](https://github.com/ethereum/EIPs/blob/mas
 
 ### General Links
 Deterministic wallet [HD](https://en.bitcoin.it/wiki/Deterministic_wallet)\
-What is a [Dapp](https://ethereum.stackexchange.com/questions/383/what-is-a-dapp)
+What is a [Dapp](https://ethereum.stackexchange.com/questions/383/what-is-a-dapp)\
+[Apex Charts](https://apexcharts.com/)

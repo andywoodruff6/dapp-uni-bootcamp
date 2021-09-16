@@ -20,6 +20,7 @@ function token(state = {}, action) {
   }
 }
 
+// add a case every time we add a new action item
 function exchange(state = {}, action) {
   switch (action.type) {
     case 'EXCHANGE_LOADED':

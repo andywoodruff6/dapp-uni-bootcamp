@@ -1,6 +1,6 @@
-import { get }            from 'lodash'
-import moment             from 'moment'
-import { createSelector } from "reselect"
+import { get, groupBy, reject } from 'lodash'
+import moment                   from 'moment'
+import { createSelector }       from "reselect"
 import { ETHER_ADDRESS, 
          token, 
          ether,
@@ -13,7 +13,7 @@ export const accountSelector = createSelector(account, a => a)
 // export const accountSelector = createSelector(account, a => a)
 // ^ this is a routine pattern when we want to fetch items from the state 
 
-// Loading basic states to be used in App.js ///////////////////////////////////
+// Loading basic states to be used in App.js 
 const tokenLoaded = state => get(state, 'token.loaded', false)
 export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl)
 
@@ -30,7 +30,13 @@ export const contractsLoadedSelector = createSelector(
     exchangeLoaded,
     (tl, el) => (tl && el)
 )
-////////////////////////////////////////////////////////////////////////////////
+// This follows the same pattern as above.
+// CANCELLED ORDERS
+const cancelledOrdersLoaded = state => get(state, 'exchange.cancelledOrders.loaded', false)
+export const cancelledOrdersLoadedSelector = createSelector(cancelledOrdersLoaded, loaded => loaded)
+
+const cancelledOrders = state => get(state, 'exchange.cancelledOrders.date', [])
+export const cancelledOrdersSelector = createSelector(cancelledOrders, o => o)
 
 // 1) Set up filledOrders like above, except this is an array
 // 2) Take orders and sort ascending (a-b) for decorating
@@ -105,5 +111,71 @@ const decorateOrder = (order) => {
         tokenAmount: token(tokenAmount),
         tokenPrice,
         formattedTimestamp: moment.unix(order.timestamp).format('h:m:ss a M/D')
+    })
+}
+
+// OPEN ORDERS
+const allOrdersLoaded = state => get(state, 'exchange.allOrders.loaded', false)
+const allOrders = state => get(state, 'exchange.allOrders.data', [])
+
+
+const openOrders = state => {
+    const all       = allOrders(state)
+    const cancelled = cancelledOrders(state)
+    const filled    = filledOrders(state)
+    // In openOrders, we rejected if true. 
+    // The expression we are checking, checks inside the filled array 
+    // and if the id's match then the order has been filled.
+    // Then do the same thing for cancelled
+    const openOrders = reject(all, (order) => {
+        const orderFilled = filled.some((o) => o.id === order.id)
+        const orderCanceled = cancelled.some((o) => o.id === order.id)
+        return(orderFilled || orderCanceled)
+    })
+    return openOrders
+}
+const orderBookLoaded = state => cancelledOrdersLoaded(state) && 
+                                 filledOrdersLoaded(state)    && 
+                                 allOrdersLoaded(state)
+export const orderBookLoadedSelector = createSelector(orderBookLoaded, loaded => loaded)
+
+// Create order book
+export const orderBookSelector = createSelector(
+    openOrders,
+    (orders) => {
+        //Decorate orders
+        orders = decorateOrderBookOrders(orders)
+        orders = groupBy(orders, 'orderType')
+
+        const buyOrders  = get(orders, 'buy', [])
+        orders = {
+            ...orders,
+            buyOrders: buyOrders.sort((a,b) => b.tokenPrice - a.tokenPrice)
+        }
+        const sellOrders = get(orders, 'sell', [])
+        orders = {
+            ...orders,
+            sellOrders: sellOrders.sort((a,b) => b.tokenPrice - a.tokenPrice)
+        }
+        return orders
+    }
+)
+
+const decorateOrderBookOrders = (orders) => {
+    return(
+        orders.map((order) => {
+            order = decorateOrder(order)
+            order = decorateOrderBookOrder(order)
+            return (order)
+        })
+    )
+}
+const decorateOrderBookOrder = (order) => {
+    const orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+    return({
+        ...order,
+        orderType,
+        orderTypeClass: (orderType === 'buy' ? GREEN : RED),
+        orderFilledClass: orderType === 'buy' ? 'sell' : 'buy'
     })
 }

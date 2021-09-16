@@ -113,11 +113,9 @@ const decorateOrder = (order) => {
         formattedTimestamp: moment.unix(order.timestamp).format('h:m:ss a M/D')
     })
 }
-
 // OPEN ORDERS
 const allOrdersLoaded = state => get(state, 'exchange.allOrders.loaded', false)
 const allOrders = state => get(state, 'exchange.allOrders.data', [])
-
 
 const openOrders = state => {
     const all       = allOrders(state)
@@ -177,5 +175,79 @@ const decorateOrderBookOrder = (order) => {
         orderType,
         orderTypeClass: (orderType === 'buy' ? GREEN : RED),
         orderFilledClass: orderType === 'buy' ? 'sell' : 'buy'
+    })
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+// // const myfilledOrdersLoaded = state => get(state, 'exchange.filledOrders.loaded', false)
+export const myFilledOrdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
+
+export const myFilledOrdersSelector = createSelector(
+    account,
+    filledOrders,
+    (account, orders) => {
+        orders = orders.filter((o) => o.user === account || o.userFill === account)
+        orders = orders.sort((a,b) => a.timestamp - b.timestamp)
+        orders = decorateMyFilledOrders(orders, account)
+        return orders
+    }
+)
+
+const decorateMyFilledOrders = (orders, account) => {
+    return(
+        orders.map((order) => {
+            order = decorateOrder(order)
+            order = decorateMyFilledOrder(order, account)
+            return(order)
+        })
+    )
+}
+const decorateMyFilledOrder = (order, account) => {
+    const myOrder = order.user === account
+    let orderType
+
+    if(myOrder) {
+        orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+    } else{
+        orderType = order.tokenGive === ETHER_ADDRESS ? 'sell' : 'buy'
+    }
+    return({
+        ...order,
+        orderType,
+        orderTypeClass: (orderType === 'buy' ? GREEN : RED),
+        orderSign: (orderType === 'buy' ? '+' : '-')
+    })   
+}
+
+export const myOpenOrdersLoadedSelector = createSelector(orderBookLoaded, loaded => loaded)
+export const myOpenOrdersSelector = createSelector(
+    account,
+    openOrders,
+    (account, orders) => {
+        orders = orders.filter((o) => o.user === account)
+        orders = decorateMyOpenOrders(orders)
+        orders = orders.sort((a,b) => b.timestamp - a.timestamp)
+        return(orders)
+    }
+)
+
+const decorateMyOpenOrders = (orders, account) => {
+    return(
+        orders.map((order) => {
+            order = decorateOrder(order)
+            order = decorateMyOpenOrder(order, account)
+            return (order)
+        })
+    )
+}
+
+const decorateMyOpenOrder = (order, account) => {
+    let orderType = order.tokenGive === ETHER_ADDRESS ? 'buy' : 'sell'
+
+    return({
+        ...order,
+        orderType,
+        orderTypeClass: (orderType === 'buy' ? GREEN : RED)
     })
 }

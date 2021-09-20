@@ -15,8 +15,8 @@ Ethereum Improvement Proposal [eip-20](https://github.com/ethereum/EIPs/blob/mas
 ### Programming Resources
 [Async](https://javascript.info/async) for javascript\
 [web3.js V1.5.2](https://web3js.readthedocs.io/en/v1.5.2/)\
-[React.js](https://reactjs.org/docs/getting-started.html)
- - [React Components](https://reactjs.org/docs/react-component.html)\
+[React.js](https://reactjs.org/docs/getting-started.html)\
+[React Components](https://reactjs.org/docs/react-component.html)\
 [Bootstrap Cards](https://getbootstrap.com/docs/4.0/components/card/)\
 [Bootstrap Navs](https://getbootstrap.com/docs/4.0/components/navs/)\
 [Bootstrap Tables](https://getbootstrap.com/docs/4.0/content/tables/)\

@@ -255,7 +255,7 @@ const decorateMyOpenOrder = (order, account) => {
 
 export const priceChartLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
 
-export const prichChartSelector = createSelector(
+export const priceChartSelector = createSelector(
     filledOrders,
     (orders) => {
         orders = orders.sort((a,b) => a.timestamp - b.timestamp)

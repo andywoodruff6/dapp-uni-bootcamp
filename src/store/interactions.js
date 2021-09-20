@@ -6,7 +6,8 @@ import {
   cancelledOrdersLoaded,
   filledOrdersLoaded,
   allOrdersLoaded,
-  orderCancelling
+  orderCancelling,
+  orderCancelled
 } from './actions'
 import Web3     from 'web3'
 import Token    from '../abis/Token.json'
@@ -73,7 +74,7 @@ export const loadExchange = async (web3, networkId, dispatch) => {
 // 2a) Might be faster to start just before launch to ignore impossible solutions
 // 3) We write this code for all events that we want to listen to
 // So far, we have Cancel, Trade and Order
-export const loadAllOrders = async (exchange, dispatch) => {
+export const loadAllOrders = async (dispatch, exchange) => {
   const cancelStream = await exchange.getPastEvents('Cancel', { fromBlock: 0, toBlock: 'latest'})
   const cancelledOrders = cancelStream.map((event)=> event.returnValues)
   dispatch(cancelledOrdersLoaded(cancelledOrders))
@@ -91,11 +92,17 @@ export const loadAllOrders = async (exchange, dispatch) => {
 export const cancelOrder = (dispatch, exchange, order, account) => {
   console.log('CANCELLING')
   exchange.methods.cancelOrder(order.id).send({ from: account})
-  .on('transactionhash', (hash) => {
+  .on('transactionHash', (hash) => {
     dispatch(orderCancelling())
   })
   .on('error', (error) =>{
     console.log(error)
     window.alert('There was an error!')
-  } )
+  })
+}
+
+export const subscribeToEvents = async (dispatch, exchange) => {
+  exchange.events.Cancel({}, (error, event) =>{
+    dispatch(orderCancelled(event.returnValues))
+  })
 }

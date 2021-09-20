@@ -5,7 +5,7 @@ import Spinner                    from './spinner'
 import { chartOptions, dummyData} from './PriceChart.config'
 import {
     priceChartLoadedSelector,
-    prichChartSelector
+    priceChartSelector
 } from '../store/selectors'
 
 class PriceChart extends Component {
@@ -52,7 +52,7 @@ function mapStateToProps(state) {
     return {
         //asdfas
         priceChartLoaded: priceChartLoadedSelector(state),
-        priceChart: prichChartSelector(state)
+        priceChart: priceChartSelector(state)
     }
 }
 export default connect(mapStateToProps)(PriceChart)

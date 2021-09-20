@@ -5,7 +5,8 @@ import {
   exchangeLoaded,
   cancelledOrdersLoaded,
   filledOrdersLoaded,
-  allOrdersLoaded
+  allOrdersLoaded,
+  orderCancelling
 } from './actions'
 import Web3     from 'web3'
 import Token    from '../abis/Token.json'
@@ -84,4 +85,17 @@ export const loadAllOrders = async (exchange, dispatch) => {
   const orderStream = await exchange.getPastEvents('Order', { fromBlock: 0, toBlock: 'latest'})
   const allOrders = orderStream.map((event) => event.returnValues)
   dispatch(allOrdersLoaded(allOrders))
+}
+
+// we need to call cancelOrder in onClick in myTransactions
+export const cancelOrder = (dispatch, exchange, order, account) => {
+  console.log('CANCELLING')
+  exchange.methods.cancelOrder(order.id).send({ from: account})
+  .on('transactionhash', (hash) => {
+    dispatch(orderCancelling())
+  })
+  .on('error', (error) =>{
+    console.log(error)
+    window.alert('There was an error!')
+  } )
 }

@@ -44,7 +44,7 @@ const showForm = (props) => {
         tokenWithdrawAmount
     } = props
     return(
-        <Tabs defaultActivityKey='deposit' className="bg-dark text-white">
+        <Tabs defaultActiveKey='deposit' className="bg-dark text-white">
             <Tab eventKey='deposit' title='Deposit' className='bg-dark'>
                 <table className='table table-dark table-sm small'>
                     <thead>

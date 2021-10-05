@@ -5,7 +5,7 @@ import Trades               from './trades'
 import OrderBook            from "./OrderBook"
 import MyTransactions       from "./MyTransactions"
 import PriceChart           from "./PriceChart"
-import Balance            from "./Balance"
+import Balance              from "./Balance"
 import { loadAllOrders, 
      subscribeToEvents }    from '../store/interactions'
 

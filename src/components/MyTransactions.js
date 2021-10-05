@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect }          from 'react-redux'
 import { Tabs, Tab }        from 'react-bootstrap'
-import Spinner              from './spinner'
+import Spinner              from './Spinner'
 import {
   myFilledOrdersLoadedSelector,
   myFilledOrdersSelector,

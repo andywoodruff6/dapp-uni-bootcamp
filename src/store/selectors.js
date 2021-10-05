@@ -7,6 +7,7 @@ import { ETHER_ADDRESS,
          GREEN,
          RED,
          formatBalance }            from '../helpers'
+import { etherDepositAmountChanged } from './actions'
 
 const account = state => get(state, 'web3.account')
 export const accountSelector = createSelector(account, a => a)
@@ -345,29 +346,49 @@ export const balancesLoadingSelector = createSelector(balancesLoading, status =>
 
 const etherBalance = state => get(state, 'web3.balance', 0)
 export const etherBalanceSelector = createSelector(
-    etherBalance,
-    (balance) => {
-        return formatBalance(balance)
-    }
+  etherBalance,
+  (balance) => {
+    return formatBalance(balance)
+  }
 )
 const tokenBalance = state => get(state, 'token.balance', 0)
 export const tokenBalanceSelector = createSelector(
-    tokenBalance,
-    (balance) => {
-        return formatBalance(balance)
-    }
+  tokenBalance,
+  (balance) => {
+    return formatBalance(balance)
+  }
 )
+
 const exchangeEtherBalance = state => get(state, 'exchange.etherBalance', 0)
 export const exchangeEtherBalanceSelector = createSelector(
-    exchangeEtherBalance,
-    (balance) => {
-        return formatBalance(balance)
-    }
+  exchangeEtherBalance,
+  (balance) => {
+    return formatBalance(balance)
+  }
 )
+
 const exchangeTokenBalance = state => get(state, 'exchange.tokenBalance', 0)
 export const exchangeTokenBalanceSelector = createSelector(
-    exchangeTokenBalance,
-    (balance) => {
-        return formatBalance(balance)
-    }
+  exchangeTokenBalance,
+  (balance) => {
+    return formatBalance(balance)
+  }
 )
+
+
+
+
+
+///////////////// DEPOSITS /////////////////////////
+
+const etherDepositAmount = state => get(state, 'exchange.etherDepositAmount', null)
+export const etherDepositAmountSelector = createSelector(etherDepositAmount, amount => amount)
+
+const etherWithdrawAmount = state => get(state, 'exchange.etherWithdrawAmount', null)
+export const etherWithdrawAmountSelector = createSelector(etherWithdrawAmount, amount => amount)
+
+const tokenDepositAmount = state => get(state, 'exchange.tokenDepositAmount', null)
+export const tokenDepositAmountSelector = createSelector(tokenDepositAmount, amount => amount)
+
+const tokenWithdrawAmount = state => get(state, 'exchange.tokenWithdrawAmount', null)
+export const tokenWithdrawAmountSelector = createSelector(tokenWithdrawAmount, amount => amount)

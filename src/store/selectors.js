@@ -2,10 +2,11 @@ import { get, groupBy, minBy, maxBy, reject } from 'lodash'
 import moment                   from 'moment'
 import { createSelector }       from "reselect"
 import { ETHER_ADDRESS, 
-         token, 
+         tokens, 
          ether,
          GREEN,
-         RED }            from '../helpers'
+         RED,
+         formatBalance }            from '../helpers'
 
 const account = state => get(state, 'web3.account')
 export const accountSelector = createSelector(account, a => a)
@@ -13,15 +14,38 @@ export const accountSelector = createSelector(account, a => a)
 // export const accountSelector = createSelector(account, a => a)
 // ^ this is a routine pattern when we want to fetch items from the state 
 
+///////////////     WEB3      //////////////////////////
+const web3 = state => get(state, 'web3.connection')
+export const web3Selector = createSelector(web3, w => w)
+//////////////////////////////////////////////////////
+
+
+
+
+/////////////////////    TOKENS   /////////////////////////
 // Loading basic states to be used in App.js 
 const tokenLoaded = state => get(state, 'token.loaded', false)
 export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl)
 
+const token = state => get(state, 'token.contract')
+export const tokenSelector = createSelector(token, t => t)
+
+
+
+
+
+///////////////////      EXCHANGE    ///////////////////////////////
 const exchangeLoaded = state => get(state, 'exchange.loaded', false)
 export const exchangeLoadedSelector = createSelector(exchangeLoaded, el => el)
 
 const exchange = state => get(state, 'exchange.contract')
 export const exchangeSelector = createSelector(exchange, e => e)
+
+
+
+
+
+
 const filledOrdersLoaded = state => get(state, 'exchange.filledOrders.loaded', false)
 export const filledOdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
 
@@ -108,7 +132,7 @@ const decorateOrder = (order) => {
     return({
         ...order,
         etherAmount: ether(etherAmount),
-        tokenAmount: token(tokenAmount),
+        tokenAmount: tokens(tokenAmount),
         tokenPrice,
         formattedTimestamp: moment.unix(order.timestamp).format('h:m:ss a M/D')
     })
@@ -301,3 +325,49 @@ export const orderCancellingSelector = createSelector(orderCancelling, status =>
 
 const orderFilling = state => get(state, 'exchange.orderFilling', false)
 export const orderFillingSelector = createSelector(orderFilling, status => status)
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////// BALANCES ///////////////////
+
+const balancesLoading = state => get(state, 'exchange.balancesLoading', true)
+export const balancesLoadingSelector = createSelector(balancesLoading, status => status)
+
+const etherBalance = state => get(state, 'web3.balance', 0)
+export const etherBalanceSelector = createSelector(
+    etherBalance,
+    (balance) => {
+        return formatBalance(balance)
+    }
+)
+const tokenBalance = state => get(state, 'token.balance', 0)
+export const tokenBalanceSelector = createSelector(
+    tokenBalance,
+    (balance) => {
+        return formatBalance(balance)
+    }
+)
+const exchangeEtherBalance = state => get(state, 'exchange.etherBalance', 0)
+export const exchangeEtherBalanceSelector = createSelector(
+    exchangeEtherBalance,
+    (balance) => {
+        return formatBalance(balance)
+    }
+)
+const exchangeTokenBalance = state => get(state, 'exchange.tokenBalance', 0)
+export const exchangeTokenBalanceSelector = createSelector(
+    exchangeTokenBalance,
+    (balance) => {
+        return formatBalance(balance)
+    }
+)

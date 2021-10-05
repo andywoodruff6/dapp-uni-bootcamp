@@ -11,7 +11,7 @@ class Trades extends Component {
             <div className="vertical">
                 <div className="card bg-dark text-white">
                 <div className="card-header">
-                    Open Trades
+                    Trades
                 </div>
                 <div className="card-body">
                     <table className="table table-dark table-sm small">

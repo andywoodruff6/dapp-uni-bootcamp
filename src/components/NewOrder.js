@@ -119,7 +119,8 @@ class NewOrder extends Component {
                     New Order
                 </div>
                 <div className='card-body'>
-                    { this.props.showForm ? showForm(this.props) : <Spinner />}
+                    {/* { this.props.showForm ? showForm(this.props) : <Spinner />} */}
+                    {showForm(this.props)}
                 </div>
             </div> 
         )
